@@ -13,6 +13,8 @@ import java.time.LocalDate;
 @EnableScheduling
 public class Schedule {
 
+	private static final String TIME_ZONE = "America/Sao_Paulo";
+	
 	private final RegistryService registryService;
 
 	@Autowired
@@ -20,8 +22,7 @@ public class Schedule {
 		this.registryService = registryService;
 	}
 
-
-	@Scheduled(fixedDelay = 20000)
+	@Scheduled(cron = "0 57 23 * * *", zone = TIME_ZONE)
 	public void execute() {
 		Registry registry = registryService.findByRecurrentTrueAndDate(LocalDate.now());
 
