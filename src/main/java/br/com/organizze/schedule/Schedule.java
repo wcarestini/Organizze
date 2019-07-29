@@ -24,22 +24,18 @@ public class Schedule {
 		this.registryService = registryService;
 	} 
 
-	@Scheduled(cron = "0 55 25 * * *", zone = TIME_ZONE)
+	@Scheduled(cron = "0 55 23 * * *", zone = TIME_ZONE)
 	public void execute() {
 		List<Registry> registryList = registryService.findByRecurrentTrueAndDate(LocalDate.now());
-		for(Registry registry : registryList) {
-			if (registry != null) {
-				registry.setRecurrent(false);
-				registryService.update(registry);
-	
-				registry.setRecurrent(true);
-				registry.setDate(registry.getDate().plusDays(registry.getRecurringDays()));
-				registryService.save(registry);
-	
-				System.out.println(registry);
-			}else{
-				System.out.println("Nada para atualizar");
-			}
-		}
+		registryList.forEach(registry -> {
+			registry.setRecurrent(false);
+			registryService.update(registry);
+
+			registry.setRecurrent(true);
+			registry.setDate(registry.getDate().plusDays(registry.getRecurringDays()));
+			registryService.save(registry);
+
+			System.out.println(registry);
+		});
 	}
 }
